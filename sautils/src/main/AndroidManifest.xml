@@ -6,6 +6,8 @@
         android:label="@string/app_name"
         android:supportsRtl="true">
 
+        <service android:name="tv.superawesome.lib.sautils.SAAsyncTask$SAAsync" android:exported="false"/>
+
     </application>
 
 </manifest>
