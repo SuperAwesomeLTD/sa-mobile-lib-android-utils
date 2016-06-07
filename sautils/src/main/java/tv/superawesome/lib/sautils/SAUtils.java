@@ -143,13 +143,13 @@ public class SAUtils {
         float x11 = frame.left;
         float y11 = frame.top;
         float x12 = frame.left + frame.right;
-        float y12 = frame.top + frame.right;
+        float y12 = frame.top + frame.bottom;
 
         // child
         float x21 = target.left;
         float y21 = target.top;
         float x22 = target.left + target.right;
-        float y22 = target.top + target.right;
+        float y22 = target.top + target.bottom;
 
         // overlaps
         float overlap_x = Math.max(0, Math.min(x12, x22)) - Math.max(x11, x21);
