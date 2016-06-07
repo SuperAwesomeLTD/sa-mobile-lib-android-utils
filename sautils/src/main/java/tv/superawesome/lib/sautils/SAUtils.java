@@ -133,6 +133,39 @@ public class SAUtils {
     }
 
     /**
+     * Function that checks to see if a target rect is inside a frame rect
+     * @param target - the child target
+     * @param frame - the parent frame
+     * @return true or false
+     */
+    public static boolean isTargetRectInFrameRect(Rect target, Rect frame) {
+        // parent
+        float x11 = frame.left;
+        float y11 = frame.top;
+        float x12 = frame.left + frame.right;
+        float y12 = frame.top + frame.right;
+
+        // child
+        float x21 = target.left;
+        float y21 = target.top;
+        float x22 = target.left + target.right;
+        float y22 = target.top + target.right;
+
+        // overlaps
+        float overlap_x = Math.max(0, Math.min(x12, x22)) - Math.max(x11, x21);
+        float overlap_y = Math.max(0, Math.min(y12, y22)) - Math.max(y11, y21);
+        float overlap = overlap_x * overlap_y;
+
+        // child area
+        float barea = target.right * target.bottom;
+
+        // threshold
+        float threshold = barea / 2.0f;
+
+        return overlap > threshold;
+    }
+
+    /**
      * Remove all elements from a list, except the first
      * @param original - the original list
      * @return - a list with just one element, the first one of the original
