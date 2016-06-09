@@ -364,6 +364,24 @@ public class SAUtils {
     }
 
     /**
+     * Get a base CDN URL from resource
+     * @param resourceURL a valid resource URL
+     * @return
+     */
+    public static String findBaseURLFromResourceURL(String resourceURL) {
+        if (resourceURL == null) return null;
+        if (!isValidURL(resourceURL)) return null;
+        String workString = resourceURL.replace("\\", "");
+        String[] components = workString.split("/");
+        String result = "";
+        for (int i = 0; i < components.length - 1; i++){
+            result += components[i] + "/";
+        }
+        if (isValidURL(result)) return result;
+        return null;
+    }
+
+    /**
      * Function that checks at run-time if a class is loaded or not
      * @param className
      * @return
