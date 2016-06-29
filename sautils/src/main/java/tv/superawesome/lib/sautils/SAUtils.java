@@ -19,11 +19,15 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Rect;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
 import android.util.Patterns;
 import android.view.Display;
 import android.view.View;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -274,6 +278,90 @@ public class SAUtils {
     /** constants */
     private static final String iOS_Mobile_UserAgent = "Mozilla/5.0 (iPhone; CPU iPhone OS 6_1_4 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Version/6.0 Mobile/10B350 Safari/8536.25";
     private static final String iOS_Tablet_UserAgent = "Mozilla/5.0 (iPad; CPU OS 7_0 like Mac OS X) AppleWebKit/537.51.1 (KHTML, like Gecko) Version/7.0 Mobile/11A465 Safari/9537.53";
+
+    public enum SAConnectionType {
+        unknown {
+            @Override
+            public String toString() {
+                return "unknown";
+            }
+        },
+        ethernet {
+            @Override
+            public String toString() {
+                return "ethernet";
+            }
+        },
+        wifi {
+            @Override
+            public String toString() {
+                return "wifi";
+            }
+        },
+        cellular_unknown {
+            @Override
+            public String toString() {
+                return "cellular_unknown ";
+            }
+        },
+        cellular_2g {
+            @Override
+            public String toString() {
+                return "cellular_2g";
+            }
+        },
+        cellular_3g {
+            @Override
+            public String toString() {
+                return "cellular_3g";
+            }
+        },
+        cellular_4g {
+            @Override
+            public String toString() {
+                return "cellular_4g";
+            }
+        }
+    }
+
+    /**
+     * Gets the current connection type
+     * @return A connection type (SA) enum
+     */
+    public static SAConnectionType getNetworkConnectivity (Context context) {
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo info = cm.getActiveNetworkInfo();
+        if(info==null || !info.isConnected())
+            return SAConnectionType.unknown;
+        if(info.getType() == ConnectivityManager.TYPE_WIFI)
+            return SAConnectionType.wifi;
+        if(info.getType() == ConnectivityManager.TYPE_MOBILE){
+            int networkType = info.getSubtype();
+            switch (networkType) {
+                case TelephonyManager.NETWORK_TYPE_GPRS:
+                case TelephonyManager.NETWORK_TYPE_EDGE:
+                case TelephonyManager.NETWORK_TYPE_CDMA:
+                case TelephonyManager.NETWORK_TYPE_1xRTT:
+                case TelephonyManager.NETWORK_TYPE_IDEN: //api<8 : replace by 11
+                    return SAConnectionType.cellular_2g;
+                case TelephonyManager.NETWORK_TYPE_UMTS:
+                case TelephonyManager.NETWORK_TYPE_EVDO_0:
+                case TelephonyManager.NETWORK_TYPE_EVDO_A:
+                case TelephonyManager.NETWORK_TYPE_HSDPA:
+                case TelephonyManager.NETWORK_TYPE_HSUPA:
+                case TelephonyManager.NETWORK_TYPE_HSPA:
+                case TelephonyManager.NETWORK_TYPE_EVDO_B: //api<9 : replace by 14
+                case TelephonyManager.NETWORK_TYPE_EHRPD:  //api<11 : replace by 12
+                case TelephonyManager.NETWORK_TYPE_HSPAP:  //api<13 : replace by 15
+                    return SAConnectionType.cellular_3g;
+                case TelephonyManager.NETWORK_TYPE_LTE:    //api<11 : replace by 13
+                    return SAConnectionType.cellular_4g;
+                default:
+                    return SAConnectionType.unknown;
+            }
+        }
+        return SAConnectionType.unknown;
+    }
 
     /**
      * Get the User agent based on android size (mobile or tablet)

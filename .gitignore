@@ -3,3 +3,4 @@ app/*
 wrapper/*
 .gradle/*
 local.properties
+java_pid*
