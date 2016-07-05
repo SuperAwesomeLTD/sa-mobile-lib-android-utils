@@ -13,7 +13,6 @@
 package tv.superawesome.lib.sautils;
 
 import android.app.Activity;
-import android.app.Application;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
@@ -22,18 +21,14 @@ import android.graphics.Rect;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Patterns;
 import android.view.Display;
 import android.view.View;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -44,8 +39,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
-
-import javax.net.ssl.HttpsURLConnection;
 
 /**
  * Class that contains a lot of static aux functions
@@ -497,5 +490,14 @@ public class SAUtils {
             width = w;
             height = h;
         }
+    }
+
+    /**
+     * Validate email
+     * @param target
+     * @return true of false
+     */
+    public final static boolean isValidEmail(CharSequence target) {
+        return !TextUtils.isEmpty(target) && android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
     }
 }
