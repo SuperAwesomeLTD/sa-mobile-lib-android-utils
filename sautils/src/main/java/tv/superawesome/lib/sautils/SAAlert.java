@@ -14,6 +14,12 @@ public class SAAlert {
     private AlertDialog dialog;
     private EditText input;
 
+    private static SAAlert instance = new SAAlert();
+    private SAAlert(){}
+    public static SAAlert getInstance(){
+        return instance;
+    }
+
     public void show(Context c, String title, String message, String okTitle, String nokTitle, boolean hasInput, int inputType, final SAAlertInterface listener) {
         final AlertDialog.Builder alert = new AlertDialog.Builder(c);
         alert.setCancelable(false);
@@ -38,13 +44,15 @@ public class SAAlert {
             }
         });
 
-        alert.setNegativeButton(nokTitle, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                if (listener != null) {
-                    listener.didClickOnNOK();
+        if (nokTitle != null) {
+            alert.setNegativeButton(nokTitle, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    if (listener != null) {
+                        listener.didClickOnNOK();
+                    }
                 }
-            }
-        });
+            });
+        }
 
         dialog = alert.create();
         dialog.show();
