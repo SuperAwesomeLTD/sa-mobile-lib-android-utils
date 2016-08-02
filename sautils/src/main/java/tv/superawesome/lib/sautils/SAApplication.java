@@ -11,6 +11,7 @@ public class SAApplication {
 
     public static void setSAApplicationContext(Context _applicationContext){
         applicationContext = _applicationContext;
+
     }
 
     public static Context getSAApplicationContext(){
