@@ -11,6 +11,11 @@ import android.widget.EditText;
  * Created by gabriel.coman on 05/07/16.
  */
 public class SAAlert {
+    // constants
+    public static final int OK_BUTTON = 0;
+    public static final int CANCEL_BUTTON = 1;
+
+
     private AlertDialog dialog;
     private EditText input;
 
@@ -36,9 +41,9 @@ public class SAAlert {
             public void onClick(DialogInterface dialog, int whichButton) {
                 if (listener != null) {
                     if (input != null) {
-                        listener.didClickOnOK(input.getText().toString());
+                        listener.pressed(OK_BUTTON, input.getText().toString());
                     } else {
-                        listener.didClickOnOK(null);
+                        listener.pressed(OK_BUTTON, null);
                     }
                 }
             }
@@ -48,7 +53,7 @@ public class SAAlert {
             alert.setNegativeButton(nokTitle, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
                     if (listener != null) {
-                        listener.didClickOnNOK();
+                        listener.pressed(CANCEL_BUTTON, null);
                     }
                 }
             });
