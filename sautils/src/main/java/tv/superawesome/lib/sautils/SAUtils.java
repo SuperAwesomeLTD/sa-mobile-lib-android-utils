@@ -26,6 +26,7 @@ import android.util.DisplayMetrics;
 import android.util.Patterns;
 import android.view.Display;
 import android.view.View;
+import android.webkit.WebView;
 
 import org.json.JSONObject;
 
@@ -361,10 +362,12 @@ public class SAUtils {
      * @return a user agent string
      */
     public static String getUserAgent() {
-        if (getSystemSize() == SASystemSize.tablet) {
-            return iOS_Tablet_UserAgent;
+        Context c = SAApplication.getSAApplicationContext();
+        if (c != null) {
+            return new WebView(SAApplication.getSAApplicationContext()).getSettings().getUserAgentString();
+        } else {
+            return System.getProperty("http.agent");
         }
-        return iOS_Mobile_UserAgent;
     }
 
     /**
