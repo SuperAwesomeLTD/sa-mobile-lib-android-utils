@@ -248,21 +248,30 @@ public class SAUtils {
      * Function that gets the app name
      * @return the app name
      */
-    public static String getAppLabel() {
-        Context pContext = SAApplication.getSAApplicationContext();
-        PackageManager lPackageManager = pContext.getPackageManager();
-        ApplicationInfo lApplicationInfo = null;
-        try {
-            lApplicationInfo = lPackageManager.getApplicationInfo(pContext.getApplicationInfo().packageName, 0);
-        } catch (final PackageManager.NameNotFoundException e) {
+    public static String getAppLabel(Context context) {
+
+        String defaultAppLabel = "Unknown";
+
+        if (context != null) {
+
+            PackageManager packageManager = context.getPackageManager();
+
+            if (packageManager != null) {
+
+                try {
+                    ApplicationInfo applicationInfo = packageManager.getApplicationInfo(context.getApplicationInfo().packageName, 0);
+                    String name = (String) (applicationInfo != null ? packageManager.getApplicationLabel(applicationInfo) : "Unknown");
+                    name = URLEncoder.encode(name, "UTF-8");
+                    return name;
+                } catch (PackageManager.NameNotFoundException | UnsupportedEncodingException  ignored) {
+                    return defaultAppLabel;
+                }
+            } else {
+                return defaultAppLabel;
+            }
+        } else {
+            return defaultAppLabel;
         }
-        String name = (String) (lApplicationInfo != null ? lPackageManager.getApplicationLabel(lApplicationInfo) : "Unknown");
-        try {
-            name = URLEncoder.encode(name, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        return name;
     }
 
     /**********************************************************************************************/
@@ -361,10 +370,9 @@ public class SAUtils {
      * Get the User agent based on android size (mobile or tablet)
      * @return a user agent string
      */
-    public static String getUserAgent() {
-        Context c = SAApplication.getSAApplicationContext();
-        if (c != null) {
-            return new WebView(SAApplication.getSAApplicationContext()).getSettings().getUserAgentString();
+    public static String getUserAgent(Context context) {
+        if (context != null) {
+            return new WebView(context).getSettings().getUserAgentString();
         } else {
             return System.getProperty("http.agent");
         }
