@@ -233,7 +233,7 @@ public class SAUtils {
      * @return - a list with just one element, the first one of the original
      */
     public static List removeAllButFirstElement(List original) {
-        if (original.size() >= 1) {
+        if (original != null && original.size() >= 1) {
             List finalList = new ArrayList<>();
             finalList.add(original.get(0));
             return finalList;
@@ -347,7 +347,7 @@ public class SAUtils {
 
         try {
             Class.forName(className);
-        } catch (ClassNotFoundException e) {
+        } catch (ClassNotFoundException | NullPointerException e) {
             driverAvailable = false;
         }
 
@@ -363,13 +363,25 @@ public class SAUtils {
      * @return A connection type (SA) enum
      */
     public static SAConnectionType getNetworkConnectivity (Context context) {
+        // null guard
+        if (context == null) return SAConnectionType.unknown;
+
+        // get connectivity manager
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo info = cm.getActiveNetworkInfo();
-        if(info==null || !info.isConnected())
+
+        // unknown case
+        if(info == null || !info.isConnected()) {
             return SAConnectionType.unknown;
-        if(info.getType() == ConnectivityManager.TYPE_WIFI)
+        }
+
+        // wifi case
+        if(info.getType() == ConnectivityManager.TYPE_WIFI) {
             return SAConnectionType.wifi;
-        if(info.getType() == ConnectivityManager.TYPE_MOBILE){
+        }
+
+        // mobile case
+        if(info.getType() == ConnectivityManager.TYPE_MOBILE) {
             int networkType = info.getSubtype();
             switch (networkType) {
                 case TelephonyManager.NETWORK_TYPE_GPRS:
@@ -394,6 +406,8 @@ public class SAUtils {
                     return SAConnectionType.unknown;
             }
         }
+
+        // default return
         return SAConnectionType.unknown;
     }
 
@@ -424,6 +438,9 @@ public class SAUtils {
     public static String formGetQueryFromDict(JSONObject dict) {
         String queryString = "";
 
+        // null check
+        if (dict == null) return queryString;
+
         ArrayList<String> queryArray = new ArrayList<>();
         Iterator<String> keys = dict.keys();
         while (keys.hasNext()) {
@@ -450,41 +467,37 @@ public class SAUtils {
      * @param dict a json dictionary
      */
     public static String encodeDictAsJsonDict(JSONObject dict) {
+        // check null
+        if (dict == null || dict.length() == 0) return "%7B%7D";
+
+        // if all's ok try encoding
+        return encodeURL(dict.toString());
+    }
+
+    public static String encodeURL(String urlStr) {
+        // check null
+        if (urlStr == null || urlStr.equals("")) return "";
+
+        // if all's ok try encoding
         try {
-            return URLEncoder.encode(dict.toString(), "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            return URLEncoder.encode(urlStr, "UTF-8");
+        } catch (UnsupportedEncodingException | NullPointerException e) {
             return "";
         }
-    }
 
-    /**
-     * return true if json is empty, false otherwise
-     * @param dict a json dict
-     */
-    public static boolean isJSONEmpty(JSONObject dict) {
-        if (dict == null) return true;
-        if (dict.length() == 0) return true;
-        if (dict.toString().equals("{}")) return true;
-        return false;
-    }
-
-    /**
-     * checks if an URL is valid
-     * @param url the url in question
-     * @return true if valid, false otherwise
-     */
-    public static boolean isValidURL(String url){
-        if (url == null) return false;
-        if (url.equals("http://")) return false;
-        if (url.equals("https://")) return false;
-        return Patterns.WEB_URL.matcher(url).matches();
-    }
-
-    public static String encodeURL(String urlStr) throws URISyntaxException, MalformedURLException {
-        URL url = new URL(urlStr);
-        URI uri = new URI(url.getProtocol(), url.getUserInfo(), url.getHost(), url.getPort(), url.getPath(), url.getQuery(), url.getRef());
-        return uri.toString();
+//        URL url;
+//        try {
+//            url = new URL(urlStr);
+//            URI uri;
+//            try {
+//                uri = new URI(url.getProtocol(), url.getUserInfo(), url.getHost(), url.getPort(), url.getPath(), url.getQuery(), url.getRef());
+//                return uri.toURL().toString();
+//            } catch (URISyntaxException e) {
+//                return "";
+//            }
+//        } catch (MalformedURLException e) {
+//            return "";
+//        }
     }
 
     /**
@@ -501,8 +514,24 @@ public class SAUtils {
         for (int i = 0; i < components.length - 1; i++){
             result += components[i] + "/";
         }
-        if (isValidURL(result)) return result;
-        return null;
+        return isValidURL(result) ? result : null;
+    }
+
+    /**
+     * return true if json is empty, false otherwise
+     * @param dict a json dict
+     */
+    public static boolean isJSONEmpty(JSONObject dict) {
+        return dict == null || dict.length() == 0 || dict.toString().equals("{}");
+    }
+
+    /**
+     * checks if an URL is valid
+     * @param url the url in question
+     * @return true if valid, false otherwise
+     */
+    public static boolean isValidURL(String url) {
+        return url != null && !url.equals("http://") && !url.equals("https://") && Patterns.WEB_URL.matcher(url).matches();
     }
 
     /**
