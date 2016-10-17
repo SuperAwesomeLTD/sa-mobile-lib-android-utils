@@ -46,9 +46,10 @@ import java.util.Random;
  */
 public class SAUtils {
 
-    /**
-     * system size - mobile or tablet basically
-     */
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // Different "globally" available declarations; for enums, typedefs, etc
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
     public enum SASystemSize {
         undefined {
             @Override
@@ -70,39 +71,67 @@ public class SAUtils {
         }
     }
 
-    /**********************************************************************************************/
-    /** GENERAL Aux Functions */
-    /**********************************************************************************************/
-
-    /**
-     * Function that returns a random number between two limits
-     * @param min - min edge
-     * @param max - max edge
-     * @return a random integer
-     */
-    public static int randomNumberBetween(int min, int max){
-        Random rand  = new Random();
-        return rand.nextInt(max - min + 1) + min;
-    }
-
-    /**
-     * Generate a Unique Key
-     * @return a unique key string
-     */
-    public static String generateUniqueKey () {
-        /** constants */
-        final String alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXZY0123456789";
-        final int length = alphabet.length();
-        final int dauLength = 32;
-
-        /** generate the string */
-        String s = "";
-        for (int i = 0; i < dauLength; i++){
-            int index = SAUtils.randomNumberBetween(0, length - 1);
-            s += alphabet.charAt(index);
+    public enum SAConnectionType {
+        unknown {
+            @Override
+            public String toString() {
+                return "unknown";
+            }
+        },
+        ethernet {
+            @Override
+            public String toString() {
+                return "ethernet";
+            }
+        },
+        wifi {
+            @Override
+            public String toString() {
+                return "wifi";
+            }
+        },
+        cellular_unknown {
+            @Override
+            public String toString() {
+                return "cellular_unknown ";
+            }
+        },
+        cellular_2g {
+            @Override
+            public String toString() {
+                return "cellular_2g";
+            }
+        },
+        cellular_3g {
+            @Override
+            public String toString() {
+                return "cellular_3g";
+            }
+        },
+        cellular_4g {
+            @Override
+            public String toString() {
+                return "cellular_4g";
+            }
         }
-        return s;
     }
+
+    /**
+     * Private SASize object
+     */
+    public static class SASize {
+        public int width = 0;
+        public int height = 0;
+
+        SASize (int w, int h){
+            width = w;
+            height = h;
+        }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // Truly aux functions
+    ////////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
      * Function that does the math to transform a pair of Width x Height into a new pair
@@ -164,6 +193,40 @@ public class SAUtils {
     }
 
     /**
+     * Function that returns a random number between two limits
+     * @param min - min edge
+     * @param max - max edge
+     * @return a random integer
+     */
+    public static int randomNumberBetween(int min, int max){
+        Random rand  = new Random();
+        return rand.nextInt(max - min + 1) + min;
+    }
+
+    /**
+     * Generate a Unique Key
+     * @return a unique key string
+     */
+    public static String generateUniqueKey () {
+        /** constants */
+        final String alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXZY0123456789";
+        final int length = alphabet.length();
+        final int dauLength = 32;
+
+        /** generate the string */
+        String s = "";
+        for (int i = 0; i < dauLength; i++){
+            int index = SAUtils.randomNumberBetween(0, length - 1);
+            s += alphabet.charAt(index);
+        }
+        return s;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // Array type functions
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /**
      * Remove all elements from a list, except the first
      * @param original - the original list
      * @return - a list with just one element, the first one of the original
@@ -178,10 +241,9 @@ public class SAUtils {
         }
     }
 
-    /**********************************************************************************************/
-    /** SYSTEM RESOURCES Aux Functions */
-    /**********************************************************************************************/
-
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // System type functions
+    ////////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
      * Get the current scale factor
@@ -274,58 +336,26 @@ public class SAUtils {
         }
     }
 
-    /**********************************************************************************************/
-    /** NETWORK Aux Functions */
-    /**********************************************************************************************/
+    /**
+     * Function that checks at run-time if a class is loaded or not
+     * @param className the name I want a test for
+     * @return true if found, false otherwsie
+     */
+    public static boolean isClassAvailable(String className){
+        boolean driverAvailable = true;
 
-    /** constants */
-    private static final String iOS_Mobile_UserAgent = "Mozilla/5.0 (iPhone; CPU iPhone OS 6_1_4 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Version/6.0 Mobile/10B350 Safari/8536.25";
-    private static final String iOS_Tablet_UserAgent = "Mozilla/5.0 (iPad; CPU OS 7_0 like Mac OS X) AppleWebKit/537.51.1 (KHTML, like Gecko) Version/7.0 Mobile/11A465 Safari/9537.53";
-
-    public enum SAConnectionType {
-        unknown {
-            @Override
-            public String toString() {
-                return "unknown";
-            }
-        },
-        ethernet {
-            @Override
-            public String toString() {
-                return "ethernet";
-            }
-        },
-        wifi {
-            @Override
-            public String toString() {
-                return "wifi";
-            }
-        },
-        cellular_unknown {
-            @Override
-            public String toString() {
-                return "cellular_unknown ";
-            }
-        },
-        cellular_2g {
-            @Override
-            public String toString() {
-                return "cellular_2g";
-            }
-        },
-        cellular_3g {
-            @Override
-            public String toString() {
-                return "cellular_3g";
-            }
-        },
-        cellular_4g {
-            @Override
-            public String toString() {
-                return "cellular_4g";
-            }
+        try {
+            Class.forName(className);
+        } catch (ClassNotFoundException e) {
+            driverAvailable = false;
         }
+
+        return driverAvailable;
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // URL and Network request helper classes
+    ////////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
      * Gets the current connection type
@@ -368,6 +398,7 @@ public class SAUtils {
 
     /**
      * Get the User agent based on android size (mobile or tablet)
+     * @param context the current context
      * @return a user agent string
      */
     public static String getUserAgent(Context context) {
@@ -387,7 +418,7 @@ public class SAUtils {
 
     /**
      * Function that forms a query string from a dict
-     * @param dict
+     * @param dict a json dictionary
      */
     public static String formGetQueryFromDict(JSONObject dict) {
         String queryString = "";
@@ -415,7 +446,7 @@ public class SAUtils {
 
     /**
      * Function that encodes a dict
-     * @param dict
+     * @param dict a json dictionary
      */
     public static String encodeDictAsJsonDict(JSONObject dict) {
         try {
@@ -439,7 +470,7 @@ public class SAUtils {
 
     /**
      * checks if an URL is valid
-     * @param url - the url in question
+     * @param url the url in question
      * @return true if valid, false otherwise
      */
     public static boolean isValidURL(String url){
@@ -458,7 +489,7 @@ public class SAUtils {
     /**
      * Get a base CDN URL from resource
      * @param resourceURL a valid resource URL
-     * @return
+     * @return a base string formed from a full resource URL
      */
     public static String findBaseURLFromResourceURL(String resourceURL) {
         if (resourceURL == null) return null;
@@ -474,41 +505,11 @@ public class SAUtils {
     }
 
     /**
-     * Function that checks at run-time if a class is loaded or not
-     * @param className
-     * @return
-     */
-    public static boolean isClassAvailable(String className){
-        boolean driverAvailable = true;
-
-        try {
-            Class.forName(className);
-        } catch (ClassNotFoundException e) {
-            driverAvailable = false;
-        }
-
-        return driverAvailable;
-    }
-
-    /**
-     * Private SASize object
-     */
-    public static class SASize {
-        public int width = 0;
-        public int height = 0;
-
-        SASize (int w, int h){
-            width = w;
-            height = h;
-        }
-    }
-
-    /**
      * Validate email
-     * @param target
+     * @param target the char sequence to check for email validity
      * @return true of false
      */
-    public final static boolean isValidEmail(CharSequence target) {
+    public static boolean isValidEmail(CharSequence target) {
         return !TextUtils.isEmpty(target) && android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
     }
 }
