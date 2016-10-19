@@ -22,6 +22,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
+import android.util.ArraySet;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.Patterns;
@@ -38,9 +39,12 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 /**
  * Class that contains a lot of static aux functions
@@ -58,10 +62,10 @@ public class SAUtils {
                 return "undefined";
             }
         },
-        mobile {
+        phone {
             @Override
             public String toString() {
-                return "mobile";
+                return "phone";
             }
         },
         tablet {
@@ -293,7 +297,7 @@ public class SAUtils {
         double screenInches = Math.sqrt(x + y);
 
         if (screenInches < 6){
-            return SASystemSize.mobile;
+            return SASystemSize.phone;
         } else {
             return SASystemSize.tablet;
         }
@@ -442,7 +446,10 @@ public class SAUtils {
         if (dict == null) return queryString;
 
         ArrayList<String> queryArray = new ArrayList<>();
+
+
         Iterator<String> keys = dict.keys();
+
         while (keys.hasNext()) {
             String key = keys.next();
             Object valObj = dict.opt(key);
