@@ -20,6 +20,7 @@ import android.content.res.Resources;
 import android.graphics.Rect;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.ArraySet;
@@ -28,6 +29,7 @@ import android.util.Log;
 import android.util.Patterns;
 import android.view.Display;
 import android.view.View;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 
 import org.json.JSONObject;
@@ -45,6 +47,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.concurrent.SynchronousQueue;
 
 /**
  * Class that contains a lot of static aux functions
@@ -421,10 +424,18 @@ public class SAUtils {
      * @return a user agent string
      */
     public static String getUserAgent(Context context) {
-        if (context != null) {
-            return new WebView(context).getSettings().getUserAgentString();
+        if (Build.VERSION.SDK_INT >= 17) {
+            if (context != null) {
+                return WebSettings.getDefaultUserAgent(context);
+            } else {
+                return System.getProperty("http.agent");
+            }
         } else {
-            return System.getProperty("http.agent");
+            if (context != null) {
+                return new WebView(context).getSettings().getUserAgentString();
+            } else {
+                return System.getProperty("http.agent");
+            }
         }
     }
 
