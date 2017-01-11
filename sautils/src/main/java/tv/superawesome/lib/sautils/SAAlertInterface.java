@@ -1,8 +1,20 @@
+/**
+ * @Copyright:   SuperAwesome Trading Limited 2017
+ * @Author:      Gabriel Coman (gabriel.coman@superawesome.tv)
+ */
 package tv.superawesome.lib.sautils;
 
 /**
- * Created by gabriel.coman on 05/07/16.
+ * This interface defines methods that correspond to the SAAlert class.
  */
 public interface SAAlertInterface {
+
+    /**
+     * Method gets called when a user pressed on one of the buttons of an alert dialog.
+     * It's used to send back information to the library user
+     *
+     * @param button    which button was pressed
+     * @param message   the message that was recorded in the input box, if it exists
+     */
     void pressed(int button, String message);
 }

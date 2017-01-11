@@ -1,14 +1,6 @@
 /**
- * @class: SAUtils.java
- * @package: tv.superawesome.sdk.aux
- * @copyright: (c) 2015 SuperAwesome Ltd. All rights reserved.
- * @author: Gabriel Coman
- * @date: 28/09/2015
- *
- */
-
-/**
- * packaged and imports for this class
+ * @Copyright:   SuperAwesome Trading Limited 2017
+ * @Author:      Gabriel Coman (gabriel.coman@superawesome.tv)
  */
 package tv.superawesome.lib.sautils;
 
@@ -23,9 +15,7 @@ import android.net.NetworkInfo;
 import android.os.Build;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
-import android.util.ArraySet;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.util.Patterns;
 import android.view.Display;
 import android.view.View;
@@ -35,29 +25,23 @@ import android.webkit.WebView;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
-import java.util.SortedSet;
-import java.util.TreeSet;
-import java.util.concurrent.SynchronousQueue;
 
 /**
- * Class that contains a lot of static aux functions
+ * Class that contains a lot of static aux functions used across the SDK to simplify code
  */
 public class SAUtils {
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    // Different "globally" available declarations; for enums, typedefs, etc
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
+    /**
+     * SAUtils enum defining possible SDK system sizes
+     *  - undefined: means the SDK could not determine the correct system size
+     *  - phone: the SDK determined it's a phone-type device
+     *  - tablet: the SDK determined it's a tablet-type device
+     */
     public enum SASystemSize {
         undefined {
             @Override
@@ -79,6 +63,13 @@ public class SAUtils {
         }
     }
 
+    /**
+     * SAUtils enum defining possible connection types
+     *  - unknown
+     *  - ethernet
+     *  - wifi
+     *  - cellular_unknown, 2g, 3g, 4g,
+     */
     public enum SAConnectionType {
         unknown {
             @Override
@@ -125,30 +116,35 @@ public class SAUtils {
     }
 
     /**
-     * Private SASize object
+     * Internal SAUtils class defining a SASize object (containing width & height)
      */
     public static class SASize {
+
+        // member vars
         public int width = 0;
         public int height = 0;
 
+        /**
+         * SASize basic constructor
+         *
+         * @param w new width
+         * @param h new height
+         */
         SASize (int w, int h){
             width = w;
             height = h;
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    // Truly aux functions
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
     /**
      * Function that does the math to transform a pair of Width x Height into a new pair
      * of Width x Height by also maintaing aspect ratio
-     * @param newW - new Height
-     * @param newH - new Width
-     * @param oldW - source Width
-     * @param oldH - source Height
-     * @return a rect with X, Y, W, H
+     *
+     * @param newW new Height
+     * @param newH new Width
+     * @param oldW source Width
+     * @param oldH source Height
+     * @return     a rect with X, Y, W, H
      */
     public static Rect mapOldSizeIntoNewSize(float newW, float newH, float oldW, float oldH) {
         if (oldW == 1 || oldW == 0) { oldW = newW; }
@@ -169,9 +165,10 @@ public class SAUtils {
 
     /**
      * Function that checks to see if a target rect is inside a frame rect
-     * @param target - the child target
-     * @param frame - the parent frame
-     * @return true or false
+     *
+     * @param target the child target
+     * @param frame  the parent frame
+     * @return       true or false
      */
     public static boolean isTargetRectInFrameRect(Rect target, Rect frame) {
         // parent
@@ -202,9 +199,10 @@ public class SAUtils {
 
     /**
      * Function that returns a random number between two limits
-     * @param min - min edge
-     * @param max - max edge
-     * @return a random integer
+     *
+     * @param min min edge
+     * @param max max edge
+     * @return    a random integer
      */
     public static int randomNumberBetween(int min, int max){
         Random rand  = new Random();
@@ -213,15 +211,16 @@ public class SAUtils {
 
     /**
      * Generate a Unique Key
+     *
      * @return a unique key string
      */
     public static String generateUniqueKey () {
-        /** constants */
+        // constants
         final String alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXZY0123456789";
         final int length = alphabet.length();
         final int dauLength = 32;
 
-        /** generate the string */
+        // generate the string
         String s = "";
         for (int i = 0; i < dauLength; i++){
             int index = SAUtils.randomNumberBetween(0, length - 1);
@@ -230,14 +229,11 @@ public class SAUtils {
         return s;
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    // Array type functions
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
     /**
      * Remove all elements from a list, except the first
-     * @param original - the original list
-     * @return - a list with just one element, the first one of the original
+     *
+     * @param original the original list
+     * @return         a list with just one element, the first one of the original
      */
     public static List removeAllButFirstElement(List original) {
         if (original != null && original.size() >= 1) {
@@ -249,14 +245,11 @@ public class SAUtils {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    // System type functions
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get the current scale factor
-     * @param activity - the activity to pass along as context
-     * @return a float meaning the scale
+     *
+     * @param activity  the activity to pass along as context
+     * @return          a float meaning the scale
      */
     public static float getScaleFactor(Activity activity){
         DisplayMetrics metrics = new DisplayMetrics();
@@ -267,8 +260,9 @@ public class SAUtils {
 
     /**
      * Function that returns the current screen size
-     * @param activity - the activity to pass along as context
-     * @return a SASize object with width & height members
+     *
+     * @param activity  the activity to pass along as context
+     * @return          a SASize object with width & height members
      */
     public static SASize getRealScreenSize(Activity activity, boolean rotate) {
         DisplayMetrics metrics = new DisplayMetrics();
@@ -284,7 +278,8 @@ public class SAUtils {
     }
 
     /**
-     * function that gets the system size
+     * Function that gets the system size
+     *
      * @return where either tablet or mobile
      */
     public static SASystemSize getSystemSize() {
@@ -307,7 +302,8 @@ public class SAUtils {
     }
 
     /**
-     * just return the verbose system
+     * Just return the verbose system
+     *
      * @return a string
      */
     public static String getVerboseSystemDetails() {
@@ -316,6 +312,7 @@ public class SAUtils {
 
     /**
      * Function that gets the app name
+     *
      * @return the app name
      */
     public static String getAppLabel(Context context) {
@@ -346,8 +343,9 @@ public class SAUtils {
 
     /**
      * Function that checks at run-time if a class is loaded or not
+     *
      * @param className the name I want a test for
-     * @return true if found, false otherwsie
+     * @return          true if found, false otherwsie
      */
     public static boolean isClassAvailable(String className){
         boolean driverAvailable = true;
@@ -361,12 +359,9 @@ public class SAUtils {
         return driverAvailable;
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    // URL and Network request helper classes
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
     /**
      * Gets the current connection type
+     *
      * @return A connection type (SA) enum
      */
     public static SAConnectionType getNetworkConnectivity (Context context) {
@@ -420,8 +415,9 @@ public class SAUtils {
 
     /**
      * Get the User agent based on android size (mobile or tablet)
+     *
      * @param context the current context
-     * @return a user agent string
+     * @return        a user agent string
      */
     public static String getUserAgent(Context context) {
         if (Build.VERSION.SDK_INT >= 17) {
@@ -448,6 +444,7 @@ public class SAUtils {
 
     /**
      * Function that forms a query string from a dict
+     *
      * @param dict a json dictionary
      */
     public static String formGetQueryFromDict(JSONObject dict) {
@@ -482,6 +479,7 @@ public class SAUtils {
 
     /**
      * Function that encodes a dict
+     *
      * @param dict a json dictionary
      */
     public static String encodeDictAsJsonDict(JSONObject dict) {
@@ -492,6 +490,12 @@ public class SAUtils {
         return encodeURL(dict.toString());
     }
 
+    /**
+     * Method that encodes an URL correctly
+     *
+     * @param urlStr URL to be encoded
+     * @return       a new encoded URL
+     */
     public static String encodeURL(String urlStr) {
         // check null
         if (urlStr == null || urlStr.equals("")) return "";
@@ -502,26 +506,13 @@ public class SAUtils {
         } catch (UnsupportedEncodingException | NullPointerException e) {
             return "";
         }
-
-//        URL url;
-//        try {
-//            url = new URL(urlStr);
-//            URI uri;
-//            try {
-//                uri = new URI(url.getProtocol(), url.getUserInfo(), url.getHost(), url.getPort(), url.getPath(), url.getQuery(), url.getRef());
-//                return uri.toURL().toString();
-//            } catch (URISyntaxException e) {
-//                return "";
-//            }
-//        } catch (MalformedURLException e) {
-//            return "";
-//        }
     }
 
     /**
      * Get a base CDN URL from resource
+     *
      * @param resourceURL a valid resource URL
-     * @return a base string formed from a full resource URL
+     * @return            a base string formed from a full resource URL
      */
     public static String findBaseURLFromResourceURL(String resourceURL) {
         if (resourceURL == null) return null;
@@ -536,7 +527,8 @@ public class SAUtils {
     }
 
     /**
-     * return true if json is empty, false otherwise
+     * Return true if json is empty, false otherwise
+     *
      * @param dict a json dict
      */
     public static boolean isJSONEmpty(JSONObject dict) {
@@ -544,9 +536,10 @@ public class SAUtils {
     }
 
     /**
-     * checks if an URL is valid
+     * Checks if an URL is valid
+     *
      * @param url the url in question
-     * @return true if valid, false otherwise
+     * @return    true if valid, false otherwise
      */
     public static boolean isValidURL(String url) {
         return url != null && !url.equals("http://") && !url.equals("https://") && Patterns.WEB_URL.matcher(url).matches();
@@ -554,8 +547,9 @@ public class SAUtils {
 
     /**
      * Validate email
+     *
      * @param target the char sequence to check for email validity
-     * @return true of false
+     * @return       true of false
      */
     public static boolean isValidEmail(CharSequence target) {
         return !TextUtils.isEmpty(target) && android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();

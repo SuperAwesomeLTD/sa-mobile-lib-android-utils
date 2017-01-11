@@ -1,3 +1,7 @@
+/**
+ * @Copyright:   SuperAwesome Trading Limited 2017
+ * @Author:      Gabriel Coman (gabriel.coman@superawesome.tv)
+ */
 package tv.superawesome.lib.sautils;
 
 import android.app.AlertDialog;
@@ -8,29 +12,63 @@ import android.view.View;
 import android.widget.EditText;
 
 /**
- * Created by gabriel.coman on 05/07/16.
+ * This class abstracts away the creation of a simple alert dialog
  */
 public class SAAlert {
+
     // constants
     public static final int OK_BUTTON = 0;
     public static final int CANCEL_BUTTON = 1;
 
-
+    // private instance of an alert dialog
     private AlertDialog dialog;
+
+    // private instance of an input box
     private EditText input;
 
+    // singleton instance for the SAAlert class
     private static SAAlert instance = new SAAlert();
-    private SAAlert(){}
+
+    /**
+     * Private constructor
+     */
+    private SAAlert(){
+        // do nothing
+    }
+
+    /**
+     * Get the only existing instance of the SAAlert class
+     *
+     * @return instance variable
+     */
     public static SAAlert getInstance(){
         return instance;
     }
 
-    public void show(Context c, String title, String message, String okTitle, String nokTitle, boolean hasInput, int inputType, final SAAlertInterface listener) {
+    /**
+     * Main public method of the class, that creates and displays a new alert
+     * @param c         the current context (activity or fragment)
+     * @param title     the alert box title
+     * @param message   the alert box message
+     * @param okTitle   the text for the "positive dismiss" button
+     * @param nokTitle  the text for the "negative dismiss" button
+     * @param hasInput  whether the alert should display an input box or not
+     * @param inputType the text type for the input box, if present
+     * @param listener1 an instance of the SAAlertInterface, used to send messages back to the
+     *                  library user
+     */
+    public void show(Context c, String title, String message, String okTitle, String nokTitle, boolean hasInput, int inputType, final SAAlertInterface listener1) {
+
+        // create a new listener, that is never null
+        final SAAlertInterface listener = listener1 != null ? listener1 : new SAAlertInterface() {@Override public void pressed(int button, String message) {}};
+
+        // create a new alert builder
         final AlertDialog.Builder alert = new AlertDialog.Builder(c);
         alert.setCancelable(false);
         alert.setTitle(title);
         alert.setMessage(message);
 
+        // add input, if it's the case
         if (hasInput) {
             input = new EditText(c);
             input.setInputType(inputType);
@@ -38,27 +76,33 @@ public class SAAlert {
         }
 
         alert.setPositiveButton(okTitle, new DialogInterface.OnClickListener() {
+            /**
+             * Method that gets called when a user presses the OK button / positive dismiss of an
+             * alert dialog
+             *
+             * @param dialog        current dialog reference
+             * @param whichButton   which button was pressed
+             */
             public void onClick(DialogInterface dialog, int whichButton) {
-                if (listener != null) {
-                    if (input != null) {
-                        listener.pressed(OK_BUTTON, input.getText().toString());
-                    } else {
-                        listener.pressed(OK_BUTTON, null);
-                    }
-                }
+                listener.pressed(OK_BUTTON, input != null ? input.getText().toString() : null);
             }
         });
 
         if (nokTitle != null) {
             alert.setNegativeButton(nokTitle, new DialogInterface.OnClickListener() {
+                /**
+                 * Method that gets called when the negative button is clicked
+                 *
+                 * @param dialog current dialog reference
+                 * @param which  which button was pressed
+                 */
                 public void onClick(DialogInterface dialog, int which) {
-                    if (listener != null) {
-                        listener.pressed(CANCEL_BUTTON, null);
-                    }
+                    listener.pressed(CANCEL_BUTTON, null);
                 }
             });
         }
 
+        // create and show
         dialog = alert.create();
         dialog.show();
     }
