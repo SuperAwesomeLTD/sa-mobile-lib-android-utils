@@ -10,18 +10,18 @@ import android.content.Context;
 /**
  * Class that abstracts away a progress dialog
  */
-public class SAProgressDialog {
+public class SALoadScreen {
 
     // private instance of the progress dialog
     private ProgressDialog progress;
 
     // instance var for singleton
-    private static SAProgressDialog instance = new SAProgressDialog();
+    private static SALoadScreen instance = new SALoadScreen();
 
     /**
      * Private constructor
      */
-    private SAProgressDialog () {
+    private SALoadScreen() {
         // do nothing
     }
 
@@ -30,7 +30,7 @@ public class SAProgressDialog {
      *
      * @return the current instance
      */
-    public static SAProgressDialog getInstance(){
+    public static SALoadScreen getInstance(){
         return instance;
     }
 
@@ -39,7 +39,7 @@ public class SAProgressDialog {
      *
      * @param c the current context (activity or fragment)
      */
-    public void showProgress (Context c) {
+    public void show(Context c) {
         progress = new ProgressDialog(c);
         progress.setTitle("Loading");
         progress.setMessage("Wait while loading...");
@@ -49,7 +49,7 @@ public class SAProgressDialog {
     /**
      * Public method that dismisses a progress dialog
      */
-    public void hideProgress () {
+    public void hide() {
         progress.dismiss();
     }
 }

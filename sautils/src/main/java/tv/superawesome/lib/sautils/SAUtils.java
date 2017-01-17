@@ -138,26 +138,26 @@ public class SAUtils {
 
     /**
      * Function that does the math to transform a pair of Width x Height into a new pair
-     * of Width x Height by also maintaing aspect ratio
+     * of Width x Height by also maintaining aspect ratio
      *
-     * @param newW new Height
-     * @param newH new Width
-     * @param oldW source Width
-     * @param oldH source Height
-     * @return     a rect with X, Y, W, H
+     * @param sourceW   new Height
+     * @param sourceH   new Width
+     * @param boundingW source Width
+     * @param boundingH source Height
+     * @return          a rect with X, Y, W, H
      */
-    public static Rect mapOldSizeIntoNewSize(float newW, float newH, float oldW, float oldH) {
-        if (oldW == 1 || oldW == 0) { oldW = newW; }
-        if (oldH == 1 || oldH == 0) { oldH = newH; }
-        float oldR = oldW / oldH;
-        float newR = newW / newH;
+    public static Rect mapSourceSizeIntoBoundingSize(float sourceW, float sourceH, float boundingW, float boundingH) {
+        if (boundingW == 1 || boundingW == 0) { boundingW = sourceW; }
+        if (boundingH == 1 || boundingH == 0) { boundingH = sourceH; }
+        float oldR = boundingW / boundingH;
+        float newR = sourceW / sourceH;
         float X = 0, Y = 0, W = 0, H = 0;
 
         if (oldR > newR) {
-            W = newW; H = W / oldR; X = 0; Y = (newH - H) / 2.0f;
+            W = sourceW; H = W / oldR; X = 0; Y = (sourceH - H) / 2.0f;
         }
         else {
-            H = newH; W = H * oldR; Y = 0; X = (newW - W) / 2.0f;
+            H = sourceH; W = H * oldR; Y = 0; X = (sourceW - W) / 2.0f;
         }
 
         return new Rect((int)X, (int)Y, (int)W, (int)H);

@@ -7,8 +7,6 @@ package tv.superawesome.lib.sautils;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.text.InputType;
-import android.view.View;
 import android.widget.EditText;
 
 /**
@@ -47,6 +45,7 @@ public class SAAlert {
 
     /**
      * Main public method of the class, that creates and displays a new alert
+     *
      * @param c         the current context (activity or fragment)
      * @param title     the alert box title
      * @param message   the alert box message
@@ -60,7 +59,7 @@ public class SAAlert {
     public void show(Context c, String title, String message, String okTitle, String nokTitle, boolean hasInput, int inputType, final SAAlertInterface listener1) {
 
         // create a new listener, that is never null
-        final SAAlertInterface listener = listener1 != null ? listener1 : new SAAlertInterface() {@Override public void pressed(int button, String message) {}};
+        final SAAlertInterface listener = listener1 != null ? listener1 : new SAAlertInterface() {@Override public void saDidClickOnAlertButton(int button, String message) {}};
 
         // create a new alert builder
         final AlertDialog.Builder alert = new AlertDialog.Builder(c);
@@ -81,10 +80,10 @@ public class SAAlert {
              * alert dialog
              *
              * @param dialog        current dialog reference
-             * @param whichButton   which button was pressed
+             * @param whichButton   which button was saDidClickOnAlertButton
              */
             public void onClick(DialogInterface dialog, int whichButton) {
-                listener.pressed(OK_BUTTON, input != null ? input.getText().toString() : null);
+                listener.saDidClickOnAlertButton(OK_BUTTON, input != null ? input.getText().toString() : null);
             }
         });
 
@@ -94,10 +93,10 @@ public class SAAlert {
                  * Method that gets called when the negative button is clicked
                  *
                  * @param dialog current dialog reference
-                 * @param which  which button was pressed
+                 * @param which  which button was saDidClickOnAlertButton
                  */
                 public void onClick(DialogInterface dialog, int which) {
-                    listener.pressed(CANCEL_BUTTON, null);
+                    listener.saDidClickOnAlertButton(CANCEL_BUTTON, null);
                 }
             });
         }
