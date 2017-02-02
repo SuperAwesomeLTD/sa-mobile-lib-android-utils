@@ -5,13 +5,71 @@
 package tv.superawesome.lib.sautils;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapShader;
+import android.graphics.Canvas;
+import android.graphics.ColorFilter;
+import android.graphics.Paint;
+import android.graphics.PixelFormat;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
+import android.graphics.RectF;
+import android.graphics.Shader;
+import android.graphics.drawable.Drawable;
 import android.util.Base64;
 
 import static android.graphics.BitmapFactory.decodeByteArray;
 
 public class SAImageUtils {
 
-    public static Bitmap closeImage () {
+    public static Bitmap createBitmap (int width, int height, int color, float radius) {
+        Bitmap output = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+
+        Canvas canvas = new Canvas(output);
+        final Paint paint = new Paint();
+        final Rect rect = new Rect(0, 0, output.getWidth(), output.getHeight());
+        final RectF rectF = new RectF(rect);
+
+        paint.setAntiAlias(true);
+        canvas.drawARGB(0, 0, 0, 0);
+        paint.setColor(color);
+        canvas.drawRoundRect(rectF, radius, radius, paint);
+
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+        canvas.drawBitmap(output, rect, rect, paint);
+
+        return output;
+    }
+
+    public static Bitmap createBitmap (int width, int height, int color) {
+        return createBitmap(width, height, color, 0);
+    }
+
+    public static Bitmap createBitmap (int color) {
+        return createBitmap(1, 1, color);
+    }
+
+    public static Drawable createDrawable (int width, int height, int color, float radius) {
+        return new SADrawabale(createBitmap(width, height, color), radius, 0);
+    }
+
+    public static Drawable createDrawable (int width, int height, int color) {
+        return createDrawable(width, height, color, 0);
+    }
+
+    public static Drawable createDrawable (int color) {
+        return createDrawable(1, 1, color);
+    }
+
+    public static Drawable createDrawable (Bitmap bitmap, float radius) {
+        return new SADrawabale(bitmap, radius, 0);
+    }
+
+    public static Drawable createDrawable (Bitmap bitmap) {
+        return createDrawable(bitmap, 0);
+    }
+
+    public static Bitmap createCloseButtonBitmap () {
 
         String imageString = "";
 
@@ -53,7 +111,7 @@ public class SAImageUtils {
         imageString += "AAAASUVORK5CYII=";
 
         try {
-            byte [] encodeByte= Base64.decode(imageString, Base64.DEFAULT);
+            byte [] encodeByte = Base64.decode(imageString, Base64.DEFAULT);
             return decodeByteArray(encodeByte, 0, encodeByte.length);
         } catch(Exception e) {
             e.getMessage();
@@ -61,7 +119,11 @@ public class SAImageUtils {
         }
     }
 
-    public static Bitmap padlockImage () {
+    public static Drawable createCloseButtonDrawable () {
+        return createDrawable(createCloseButtonBitmap());
+    }
+
+    public static Bitmap createPadlockBitmap () {
 
         String imageString = "iVBORw0KGgoAAAANSUhEUgAAAHwAAAAuCAYAAADqWH1CAAAAAXNSR0IArs4c6QAA" +
                 "ABxpRE9UAAAAAgAAAAAAAAAXAAAAKAAAABcAAAAXAAAJktlsfygAAAleSURBVHgB" +
@@ -152,7 +214,11 @@ public class SAImageUtils {
         }
     }
 
-    public static Bitmap gameWallClose () {
+    public static Drawable createPadlockDrawable () {
+        return createDrawable(createPadlockBitmap());
+    }
+
+    public static Bitmap createAppWallCloseButtonBitmap () {
 
         String imageString = "";
 
@@ -183,7 +249,11 @@ public class SAImageUtils {
         }
     }
 
-    public static Bitmap gameWallAppData () {
+    public static Drawable createAppWallCloseButtonDrawable () {
+        return createDrawable(createAppWallCloseButtonBitmap());
+    }
+
+    public static Bitmap createAppWallTitleBitmap () {
 
         String imageString =
                 "iVBORw0KGgoAAAANSUhEUgAAAJYAAAAeCAYAAADO4udXAAAAAXNSR0IArs4c6QAA" +
@@ -340,7 +410,11 @@ public class SAImageUtils {
         }
     }
 
-    public static Bitmap gameWallBackground () {
+    public static Drawable createAppWallTitleDrawable () {
+        return createDrawable(createAppWallTitleBitmap());
+    }
+
+    public static Bitmap createAppWallBackgroundBitmap () {
 
         String imageString =
                 "iVBORw0KGgoAAAANSUhEUgAAAHgAAADVCAYAAACc5jTiAAAAAXNSR0IArs4c6QAA" +
@@ -1520,7 +1594,11 @@ public class SAImageUtils {
         }
     }
 
-    public static Bitmap gameWallHeader () {
+    public static Drawable createAppWallBackgroundDrawable () {
+        return createDrawable(createAppWallBackgroundBitmap());
+    }
+
+    public static Bitmap createAppWallHeaderBitmap () {
 
         String imageString =
                 "iVBORw0KGgoAAAANSUhEUgAAAGQAAAAdCAYAAABcz8ldAAAAAXNSR0IArs4c6QAA" +
@@ -1594,7 +1672,11 @@ public class SAImageUtils {
         }
     }
 
-    public static Bitmap videoShadowImage () {
+    public static Drawable createAppWallHeaderDrawable () {
+        return createDrawable(createAppWallHeaderBitmap());
+    }
+
+    public static Bitmap createVideoGradientBitmap () {
 
         String imageString =
                 "iVBORw0KGgoAAAANSUhEUgAAAAoAAAAICAYAAADA+m62AAAAAXNSR0IArs4c6QAA" +
@@ -1612,45 +1694,85 @@ public class SAImageUtils {
         }
     }
 
-    public static Bitmap videoChronoBg () {
+    public static Drawable createVideoGradientDrawable () {
+        return createDrawable(createVideoGradientBitmap());
+    }
+}
 
-        String imageString = 
-                "iVBORw0KGgoAAAANSUhEUgAAACgAAAAeCAYAAABe3VzdAAAAAXNSR0IArs4c6QAA" +
-                "ABxpRE9UAAAAAgAAAAAAAAAPAAAAKAAAAA8AAAAPAAAAqpZlljYAAAB2SURBVFgJ" +
-                "YmAYauD////KQJwBxDOBeBkdMchOZZzhBZRkBuJ0OjoIl+dBbmDGcOggcRzM0eko" +
-                "DgQ6DhStMMnBQiOiG+g4UPwPFofB3JEBD0Wg4+idIWCOwEfPRHYgPoUDJjfqQErT" +
-                "9WgIjoYgpSFAqf4hkQYBAAAA//8N/uU3AAAAeElEQVRjYACC////LxuMGOQ2MBiM" +
-                "jgO5Cea+0RAkN4ZGQ5DckIPpGw1BWEiQSyOH4ExyDaGhvpnIDsygoUXkVgIZyA5U" +
-                "HoQOVIY7EMQAOjB9EDkyHcVxUAcyDxJHggKKGcOBMAGgJCi6QWmS3hkHZCdqtMIc" +
-                "NZhpAOZJyrX5WWOnAAAAAElFTkSuQmCC";
+class SADrawabale extends Drawable {
 
-        try {
-            byte [] encodeByte= Base64.decode(imageString, Base64.DEFAULT);
-            return decodeByteArray(encodeByte, 0, encodeByte.length);
-        } catch(Exception e) {
-            e.getMessage();
-            return null;
-        }
+    // instance members
+    private final float mCornerRadius;
+    private final RectF mRect = new RectF();
+    private final BitmapShader mBitmapShader;
+    private final Paint mPaint;
+    private final int mMargin;
+
+    /**
+     * Constructor that takes a bitmap, radius and margin
+     *
+     * @param bitmap        current bitmap to paint
+     * @param cornerRadius  the corner radius to add
+     * @param margin        the margin to add
+     */
+    SADrawabale(Bitmap bitmap, float cornerRadius, int margin) {
+        mCornerRadius = cornerRadius;
+        mMargin = margin;
+        mBitmapShader = new BitmapShader(bitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
+        mPaint = new Paint();
+        mPaint.setAntiAlias(true);
+        mPaint.setShader(mBitmapShader);
     }
 
-    public static Bitmap appWallCellBg () {
-
-        String imageString = 
-                "iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAAAAXNSR0IArs4c6QAA" +
-                "ABxpRE9UAAAAAgAAAAAAAAAUAAAAKAAAABQAAAAUAAAArZN/9M0AAAB5SURBVFgJ" +
-                "7JNLCkAhCEUbtKW2G+2vRfiug96HCAIfYnAFJ5V4OFpKp4WIFGRDdqRnaM+y9IXL" +
-                "jKyeRIteypAn0CBwg7l+AHGqY40Wz7hBpvOPFu22CDLvD7Ejo78Bdwrc3xDQqpwG" +
-                "adBqwFrPHaRBqwFrPXfwD4MXAAAA//99dWZQAAAAg0lEQVTtk0EOgCAMBDnwJb5L" +
-                "+B+PQNa4BuLJTWpq0l5qJG3HKaY0YzgNsJ3hlG+QLwyqGwqDqjnWhUGaUHMYVM2x" +
-                "LgzShJp/ZbCrX2lY11eDzXCQ2rqtgEXtYlhXbkA8zEHVcNjb1nWDuwCzE0iIyg9A" +
-                "vpiHWDfu5Nc/DmbuayWU53wAfuMaV88fMJYAAAAASUVORK5CYII=";
-
-        try {
-            byte [] encodeByte= Base64.decode(imageString, Base64.DEFAULT);
-            return decodeByteArray(encodeByte, 0, encodeByte.length);
-        } catch(Exception e) {
-            e.getMessage();
-            return null;
-        }
+    /**
+     * Overridden Drawable method that repaints the image when the bounds change
+     *
+     * @param bounds a Rect of bounds
+     */
+    @Override
+    protected void onBoundsChange(Rect bounds) {
+        super.onBoundsChange(bounds);
+        mRect.set(mMargin, mMargin, bounds.width() - mMargin, bounds.height() - mMargin);
     }
+
+    /**
+     * Overridden Drawable method that draws on a canvas
+     *
+     * @param canvas the current canvas
+     */
+    @Override
+    public void draw(Canvas canvas) {
+        canvas.drawRoundRect(mRect, mCornerRadius, mCornerRadius, mPaint);
+    }
+
+    /**
+     * Overridden Drawable method that gets the opacity
+     *
+     * @return a type of pixel format
+     */
+    @Override
+    public int getOpacity() {
+        return PixelFormat.TRANSLUCENT;
+    }
+
+    /**
+     * Overridden Drawable method that sets the transparency
+     *
+     * @param alpha the current alpha blending factor
+     */
+    @Override
+    public void setAlpha(int alpha) {
+        mPaint.setAlpha(alpha);
+    }
+
+    /**
+     * Overidden Drawable method that sets the color filter
+     *
+     * @param cf the color filter
+     */
+    @Override
+    public void setColorFilter(ColorFilter cf) {
+        mPaint.setColorFilter(cf);
+    }
+
 }

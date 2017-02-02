@@ -15,4 +15,9 @@
         android:layout_height="31dp"
         android:scaleType="fitXY"/>
 
+    <RelativeLayout
+        android:id="@+id/TestLayout"
+        android:layout_width="120dp"
+        android:layout_height="120dp"/>
+
 </LinearLayout>
