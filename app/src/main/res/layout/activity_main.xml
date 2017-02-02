@@ -6,6 +6,13 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
+    android:background="@color/colorPrimary"
     tools:context="tv.superawesome.lib.MainActivity">
+
+    <ImageView
+        android:id="@+id/TestImageView"
+        android:layout_width="87dp"
+        android:layout_height="31dp"
+        android:scaleType="fitXY"/>
 
 </LinearLayout>
