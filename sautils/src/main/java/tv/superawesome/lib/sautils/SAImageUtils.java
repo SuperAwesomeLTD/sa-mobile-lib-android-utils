@@ -7,16 +7,12 @@ package tv.superawesome.lib.sautils;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.BitmapShader;
 import android.graphics.Canvas;
-import android.graphics.ColorFilter;
 import android.graphics.Paint;
-import android.graphics.PixelFormat;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.graphics.Shader;
 import android.graphics.drawable.Drawable;
 import android.util.Base64;
 
@@ -74,7 +70,7 @@ public class SAImageUtils {
     }
 
     public static Drawable createDrawable (int width, int height, int color, float radius) {
-        return new SADrawabale(createBitmap(width, height, color), radius, 0);
+        return new SADrawable(createBitmap(width, height, color), radius, 0);
     }
 
     public static Drawable createDrawable (int width, int height, int color) {
@@ -86,7 +82,7 @@ public class SAImageUtils {
     }
 
     public static Drawable createDrawable (Bitmap bitmap, float radius) {
-        return new SADrawabale(bitmap, radius, 0);
+        return new SADrawable(bitmap, radius, 0);
     }
 
     public static Drawable createDrawable (Bitmap bitmap) {
@@ -1721,82 +1717,4 @@ public class SAImageUtils {
     public static Drawable createVideoGradientDrawable () {
         return createDrawable(createVideoGradientBitmap());
     }
-}
-
-class SADrawabale extends Drawable {
-
-    // instance members
-    private final float mCornerRadius;
-    private final RectF mRect = new RectF();
-    private final BitmapShader mBitmapShader;
-    private final Paint mPaint;
-    private final int mMargin;
-
-    /**
-     * Constructor that takes a bitmap, radius and margin
-     *
-     * @param bitmap        current bitmap to paint
-     * @param cornerRadius  the corner radius to add
-     * @param margin        the margin to add
-     */
-    SADrawabale(Bitmap bitmap, float cornerRadius, int margin) {
-        mCornerRadius = cornerRadius;
-        mMargin = margin;
-        mBitmapShader = new BitmapShader(bitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
-        mPaint = new Paint();
-        mPaint.setAntiAlias(true);
-        mPaint.setShader(mBitmapShader);
-    }
-
-    /**
-     * Overridden Drawable method that repaints the image when the bounds change
-     *
-     * @param bounds a Rect of bounds
-     */
-    @Override
-    protected void onBoundsChange(Rect bounds) {
-        super.onBoundsChange(bounds);
-        mRect.set(mMargin, mMargin, bounds.width() - mMargin, bounds.height() - mMargin);
-    }
-
-    /**
-     * Overridden Drawable method that draws on a canvas
-     *
-     * @param canvas the current canvas
-     */
-    @Override
-    public void draw(Canvas canvas) {
-        canvas.drawRoundRect(mRect, mCornerRadius, mCornerRadius, mPaint);
-    }
-
-    /**
-     * Overridden Drawable method that gets the opacity
-     *
-     * @return a type of pixel format
-     */
-    @Override
-    public int getOpacity() {
-        return PixelFormat.TRANSLUCENT;
-    }
-
-    /**
-     * Overridden Drawable method that sets the transparency
-     *
-     * @param alpha the current alpha blending factor
-     */
-    @Override
-    public void setAlpha(int alpha) {
-        mPaint.setAlpha(alpha);
-    }
-
-    /**
-     * Overidden Drawable method that sets the color filter
-     *
-     * @param cf the color filter
-     */
-    @Override
-    public void setColorFilter(ColorFilter cf) {
-        mPaint.setColorFilter(cf);
-    }
-
 }
