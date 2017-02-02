@@ -4,7 +4,9 @@
  */
 package tv.superawesome.lib.sautils;
 
+import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
@@ -18,9 +20,23 @@ import android.graphics.Shader;
 import android.graphics.drawable.Drawable;
 import android.util.Base64;
 
+import java.io.File;
+
+import static android.graphics.Bitmap.createScaledBitmap;
 import static android.graphics.BitmapFactory.decodeByteArray;
 
 public class SAImageUtils {
+
+    public static Bitmap createBitmap (Context context, String filename, int width, int height) {
+        File file = new File(context.getFilesDir(), filename);
+        if (file.exists()) {
+            String fileUrl = file.toString();
+            Bitmap bitmap = BitmapFactory.decodeFile(fileUrl);
+            return createScaledBitmap(bitmap, width, height, true);
+        } else {
+            return null;
+        }
+    }
 
     public static Bitmap createBitmap (int width, int height, int color, float radius) {
         Bitmap output = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
@@ -47,6 +63,14 @@ public class SAImageUtils {
 
     public static Bitmap createBitmap (int color) {
         return createBitmap(1, 1, color);
+    }
+
+    public static Drawable createDrawable (Context context, String fileName, int width, int height, float radius) {
+        return createDrawable(createBitmap(context, fileName, width, height), radius);
+    }
+
+    public static Drawable createDrawable (Context context, String fileName, int width, int height) {
+        return createDrawable(context, fileName, width, height, 0);
     }
 
     public static Drawable createDrawable (int width, int height, int color, float radius) {
