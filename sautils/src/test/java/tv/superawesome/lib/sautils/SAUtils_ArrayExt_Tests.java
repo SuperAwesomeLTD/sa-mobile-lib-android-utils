@@ -1,24 +1,20 @@
-package tv.superawesome.lib;
+package tv.superawesome.lib.sautils;
 
-import android.app.Application;
-import android.test.ApplicationTestCase;
-import android.test.suitebuilder.annotation.SmallTest;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import tv.superawesome.lib.sautils.SAUtils;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNull;
 
 /**
  * Created by gabriel.coman on 17/10/16.
  */
-public class SAUtils_ArrayExt_Tests extends ApplicationTestCase<Application> {
-    public SAUtils_ArrayExt_Tests() {
-        super(Application.class);
-    }
+public class SAUtils_ArrayExt_Tests {
 
-    @SmallTest
+    @Test
     public void testRemoveAllButFirst1 () {
         // given
         List<String> given = Arrays.asList("one", "two", "three");
@@ -34,7 +30,7 @@ public class SAUtils_ArrayExt_Tests extends ApplicationTestCase<Application> {
         assertEquals(result, expected);
     }
 
-    @SmallTest
+    @Test
     public void testRemoveAllButFirst2 () {
         // given
         List<String> given = new ArrayList<>();
@@ -49,7 +45,7 @@ public class SAUtils_ArrayExt_Tests extends ApplicationTestCase<Application> {
         assertEquals(result, expected);
     }
 
-    @SmallTest
+    @Test
     public void testRemoveAllButFirst3 () {
         // given
         List<String> given = null;

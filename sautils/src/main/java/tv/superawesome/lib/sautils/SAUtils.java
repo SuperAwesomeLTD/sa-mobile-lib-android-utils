@@ -13,6 +13,7 @@ import android.graphics.Rect;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
+import android.os.Parcel;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -30,6 +31,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
+import java.util.regex.Pattern;
 
 /**
  * Class that contains a lot of static aux functions used across the SDK to simplify code
@@ -542,7 +544,9 @@ public class SAUtils {
      * @return    true if valid, false otherwise
      */
     public static boolean isValidURL(String url) {
-        return url != null && !url.equals("http://") && !url.equals("https://") && Patterns.WEB_URL.matcher(url).matches();
+        String regex = "https?:\\/\\/(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-z]{2,6}\\b([-a-zA-Z0-9@:%_\\+.~#?&//=]*)";
+        Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
+        return url != null && !url.equals("http://") && !url.equals("https://") && pattern.matcher(url).matches();
     }
 
     /**
@@ -552,6 +556,9 @@ public class SAUtils {
      * @return       true of false
      */
     public static boolean isValidEmail(CharSequence target) {
-        return !TextUtils.isEmpty(target) && android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
+        String regex = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$";
+        Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
+
+        return target != null && !target.toString().isEmpty() && pattern.matcher(target).matches();
     }
 }

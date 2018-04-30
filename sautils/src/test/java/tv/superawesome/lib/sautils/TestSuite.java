@@ -1,4 +1,4 @@
-package tv.superawesome.lib;
+package tv.superawesome.lib.sautils;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
@@ -11,8 +11,7 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses({
         SAUtils_ArrayExt_Tests.class,
         SAUtils_Network_Tests.class,
-        SAUtils_Aux_Tests.class,
-        SAUtils_System_Tests.class
+        SAUtils_Aux_Tests.class
 })
 public class TestSuite {
 }

@@ -1,57 +1,22 @@
-package tv.superawesome.lib;
-
-import android.app.Application;
-import android.content.Context;
-import android.content.Intent;
-import android.test.ApplicationTestCase;
-import android.test.suitebuilder.annotation.SmallTest;
-import android.util.Log;
+package tv.superawesome.lib.sautils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.junit.Test;
 
-import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.StringTokenizer;
 
-import tv.superawesome.lib.sautils.SAUtils;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertTrue;
 
 /**
  * Created by gabriel.coman on 17/10/16.
  */
-public class SAUtils_Network_Tests extends ApplicationTestCase<Application> {
-    public SAUtils_Network_Tests() {
-        super(Application.class);
-    }
+public class SAUtils_Network_Tests {
 
-    @SmallTest
-    public void testGetNetworkConnectivity () {
-        // given
-        Context context1 = getContext();
-        Context context2 = null;
-
-        SAUtils.SAConnectionType result1 = SAUtils.getNetworkConnectivity(context1);
-        SAUtils.SAConnectionType result2 = SAUtils.getNetworkConnectivity(context2);
-
-        // w/ null context it always has to be unknown
-        assertEquals(result2, SAUtils.SAConnectionType.unknown);
-    }
-
-    @SmallTest
-    public void testGetUserAgent () {
-        // then
-//        String result1 = SAUtils.getUserAgent(getContext());
-//        String result2 = SAUtils.getUserAgent(null);
-//
-//        assertNotNull(result1);
-//        assertNotNull(result2);
-    }
-
-    @SmallTest
+    @Test
     public void testGetCacheBuster () {
         // given
         int bound = 10;
@@ -84,7 +49,7 @@ public class SAUtils_Network_Tests extends ApplicationTestCase<Application> {
         assertTrue(allUniques);
     }
 
-    @SmallTest
+    @Test
     public void testFormGetQueryFromDict () {
         // given
         JSONObject given1 = new JSONObject();
@@ -115,7 +80,7 @@ public class SAUtils_Network_Tests extends ApplicationTestCase<Application> {
 
     }
 
-    @SmallTest
+    @Test
     public void testEncodeDictAsJsonDict () {
         // given
         JSONObject given1 = new JSONObject();
@@ -145,7 +110,7 @@ public class SAUtils_Network_Tests extends ApplicationTestCase<Application> {
         assertEquals(result3, expected3);
     }
 
-    @SmallTest
+    @Test
     public void testIsJSONEmpty () {
         // given
         JSONObject given1 = new JSONObject();
@@ -168,7 +133,7 @@ public class SAUtils_Network_Tests extends ApplicationTestCase<Application> {
         assertTrue(result3);
     }
 
-    @SmallTest
+    @Test
     public void testIsValidURL () {
         // given
         String given1 = "https://s3-eu-west-1.amazonaws.com/sb-ads-video-transcoded/x7XkGy43vim5P1OpldlOUuxk2cuKsDSn.mp4";
@@ -191,7 +156,7 @@ public class SAUtils_Network_Tests extends ApplicationTestCase<Application> {
         assertTrue(result5);
     }
 
-    @SmallTest
+    @Test
     public void testEncodeURL () {
         // given
         String given1 = "https://s3-eu-west-1.amazonaws.com/sb-ads-video-transcoded/x7XkGy43vim5P1OpldlOUuxk2cuKsDSn.mp4";
@@ -217,7 +182,7 @@ public class SAUtils_Network_Tests extends ApplicationTestCase<Application> {
         assertEquals(result4, expected4);
     }
 
-    @SmallTest
+    @Test
     public void testFindBaseURLFromResourceURL () {
         // given
         String given1 = "https://s3-eu-west-1.amazonaws.com/sb-ads-video-transcoded/x7XkGy43vim5P1OpldlOUuxk2cuKsDSn.mp4";
@@ -247,7 +212,7 @@ public class SAUtils_Network_Tests extends ApplicationTestCase<Application> {
         assertEquals(result5, expected5);
     }
 
-    @SmallTest
+    @Test
     public void testIsValidEmail () {
         // given
         String given1 = "dev.gabriel.coman@gmail.com";
