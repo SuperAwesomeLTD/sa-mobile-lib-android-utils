@@ -1,4 +1,4 @@
-package tv.superawesome.lib.sautils;
+package tv.superawesome.lib.sautils.array;
 
 import org.junit.Test;
 
@@ -6,13 +6,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import tv.superawesome.lib.sautils.SAUtils;
+
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNull;
 
 /**
  * Created by gabriel.coman on 17/10/16.
  */
-public class SAUtils_ArrayExt_Tests {
+public class TestSAUtils_RemoveAllButFirstElement {
 
     @Test
     public void testRemoveAllButFirst1 () {
