@@ -424,7 +424,11 @@ public class SAUtils {
     public static String getUserAgent(Context context) {
         if (Build.VERSION.SDK_INT >= 17) {
             if (context != null) {
-                return WebSettings.getDefaultUserAgent(context);
+                try {
+                    return WebSettings.getDefaultUserAgent(context);
+                } catch (Exception e) {
+                    return System.getProperty("http.agent");
+                }
             } else {
                 return System.getProperty("http.agent");
             }
